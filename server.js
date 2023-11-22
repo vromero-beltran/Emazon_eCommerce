@@ -17,3 +17,20 @@ sequelize.sync({ force: false }).then(() => {
     console.log('App listening on port'+ PORT);
   });
 });
+
+// api/categories
+// api/products
+// api/tags
+
+// {
+//   "id": 6,
+//   "product_name": "Hiking Shoes",
+//   "price": 120,
+//   "stock": 20,
+//   "category_id": 5,
+//   "category": {
+//     "id": 5,
+//     "category_name": "Shoes"
+//   },
+//   "tags": []
+// } 
