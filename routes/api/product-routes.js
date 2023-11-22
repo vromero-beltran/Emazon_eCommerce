@@ -93,13 +93,34 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
-    // delete one product by its `id` value
-    Product.destroy({
-        where: {
-            id: req.params.id,
-        },
-    })
+router.delete("/:id", async (req, res) => {
+  // delete one product by its `id` value
+    try {
+        const productId = req.params.id;
+        const productData = await Product.findByPk(productId);
+
+        if (!productData) {
+            res.status(404).json({ message: "No product found with this id!" });
+            return;
+        }
+
+        // delete product tags
+        const productTags = await ProductTag.findAll({
+            where: { product_id: productId },
+        });
+        const productTagIds = productTags.map(({ id }) => id);
+        await ProductTag.destroy({ where: { id: productTagIds } });
+        // delete product
+        await Product.destroy({
+            where: {
+                id: productId,
+            },
+        });
+        res.status(200).json(productData);
+    } catch (err) {
+        res.status(500).json(err);
+        console.log(err);
+    }
 });
 
 module.exports = router;
